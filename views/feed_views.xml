@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_feed_ingredient_list" model="ir.ui.view">
+        <field name="name">feed.ingredient.list</field>
+        <field name="model">feed.ingredient</field>
+        <field name="arch" type="xml">
+            <list string="Feed Ingredients" decoration-danger="current_stock &lt;= 0">
+                <field name="name"/>
+                <field name="uom"/>
+                <field name="current_stock"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_feed_ingredient_form" model="ir.ui.view">
+        <field name="name">feed.ingredient.form</field>
+        <field name="model">feed.ingredient</field>
+        <field name="arch" type="xml">
+            <form string="Feed Ingredient">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Corn, Rice Bran, Soybean Meal"/></h1>
+                    </div>
+                    <group>
+                        <field name="uom"/>
+                        <field name="current_stock" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Purchase History">
+                            <field name="purchase_ids">
+                                <list editable="bottom">
+                                    <field name="purchase_date"/>
+                                    <field name="quantity"/>
+                                    <field name="price"/>
+                                    <field name="supplier_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_feed_ingredient" model="ir.actions.act_window">
+        <field name="name">Feed Ingredients</field>
+        <field name="res_model">feed.ingredient</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_feed_product_list" model="ir.ui.view">
+        <field name="name">feed.product.list</field>
+        <field name="model">feed.product</field>
+        <field name="arch" type="xml">
+            <list string="Feed Products" decoration-danger="current_stock &lt;= 0">
+                <field name="name"/>
+                <field name="feed_category"/>
+                <field name="source_type"/>
+                <field name="current_stock"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_feed_product_form" model="ir.ui.view">
+        <field name="name">feed.product.form</field>
+        <field name="model">feed.product</field>
+        <field name="arch" type="xml">
+            <form string="Feed Product">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Feed Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="feed_category"/>
+                        <field name="source_type"/>
+                        <field name="current_stock" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Purchase History" invisible="source_type != 'purchased'">
+                            <field name="purchase_ids">
+                                <list editable="bottom">
+                                    <field name="purchase_date"/>
+                                    <field name="purchase_location"/>
+                                    <field name="quantity"/>
+                                    <field name="price"/>
+                                    <field name="supplier_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mixing History" invisible="source_type != 'self_mixed'">
+                            <field name="mixing_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="mixing_date"/>
+                                    <field name="quantity_produced"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Consumption History">
+                            <field name="consumption_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="batch_id"/>
+                                    <field name="quantity"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_feed_product" model="ir.actions.act_window">
+        <field name="name">Feed Products (Stock)</field>
+        <field name="res_model">feed.product</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_feed_recipe_list" model="ir.ui.view">
+        <field name="name">feed.recipe.list</field>
+        <field name="model">feed.recipe</field>
+        <field name="arch" type="xml">
+            <list string="Feed Recipes">
+                <field name="name"/>
+                <field name="target_feed_category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_feed_recipe_form" model="ir.ui.view">
+        <field name="name">feed.recipe.form</field>
+        <field name="model">feed.recipe</field>
+        <field name="arch" type="xml">
+            <form string="Feed Recipe">
+                <header>
+                    <button name="action_mix_now" type="object" string="Mix Now" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Recipe Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="target_feed_category"/>
+                        <field name="total_quantity" readonly="1"/>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="ingredient_id"/>
+                            <field name="quantity"/>
+                        </list>
+                    </field>
+                    <field name="note" placeholder="Note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_feed_recipe" model="ir.actions.act_window">
+        <field name="name">Feed Recipes (Self-Mixed)</field>
+        <field name="res_model">feed.recipe</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_feed_mixing_list" model="ir.ui.view">
+        <field name="name">feed.mixing.list</field>
+        <field name="model">feed.mixing</field>
+        <field name="arch" type="xml">
+            <list string="Feed Mixing Events" decoration-success="state == 'done'">
+                <field name="name"/>
+                <field name="recipe_id"/>
+                <field name="mixing_date"/>
+                <field name="quantity_produced"/>
+                <field name="output_feed_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_feed_mixing_form" model="ir.ui.view">
+        <field name="name">feed.mixing.form</field>
+        <field name="model">feed.mixing</field>
+        <field name="arch" type="xml">
+            <form string="Feed Mixing">
+                <header>
+                    <button name="action_confirm_mixing" type="object" string="Confirm Mixing" class="oe_highlight" invisible="state == 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="recipe_id"/>
+                        <field name="mixing_date"/>
+                        <field name="quantity_produced" readonly="1"/>
+                        <field name="output_feed_id" readonly="1"/>
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <list>
+                            <field name="ingredient_id"/>
+                            <field name="quantity_used"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_feed_mixing" model="ir.actions.act_window">
+        <field name="name">Feed Mixing</field>
+        <field name="res_model">feed.mixing</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_feed_consumption_list" model="ir.ui.view">
+        <field name="name">feed.consumption.list</field>
+        <field name="model">feed.consumption</field>
+        <field name="arch" type="xml">
+            <list string="Feed Consumption" editable="bottom">
+                <field name="date"/>
+                <field name="batch_id"/>
+                <field name="feed_id"/>
+                <field name="quantity"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_feed_consumption" model="ir.actions.act_window">
+        <field name="name">Feed Consumption (Batch-wise)</field>
+        <field name="res_model">feed.consumption</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

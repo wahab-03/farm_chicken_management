@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_farm_expense_list" model="ir.ui.view">
+        <field name="name">farm.expense.list</field>
+        <field name="model">farm.expense</field>
+        <field name="arch" type="xml">
+            <list string="Farm Expenses" editable="bottom">
+                <field name="date"/>
+                <field name="category"/>
+                <field name="amount" sum="Total"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_farm_expense_form" model="ir.ui.view">
+        <field name="name">farm.expense.form</field>
+        <field name="model">farm.expense</field>
+        <field name="arch" type="xml">
+            <form string="Farm Expense">
+                <sheet>
+                    <group>
+                        <field name="date"/>
+                        <field name="category"/>
+                        <field name="amount"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_farm_expense_search" model="ir.ui.view">
+        <field name="name">farm.expense.search</field>
+        <field name="model">farm.expense</field>
+        <field name="arch" type="xml">
+            <search string="Search Expenses">
+                <field name="category"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_farm_expense" model="ir.actions.act_window">
+        <field name="name">Farm Expenses</field>
+        <field name="res_model">farm.expense</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_farm_expense_search"/>
+    </record>
+
+</odoo>

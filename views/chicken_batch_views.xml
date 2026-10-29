@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_chicken_batch_list" model="ir.ui.view">
+        <field name="name">chicken.batch.list</field>
+        <field name="model">chicken.batch</field>
+        <field name="arch" type="xml">
+            <list string="Chicken Batches" decoration-danger="current_quantity &lt;= 0">
+                <field name="name"/>
+                <field name="purchase_date"/>
+                <field name="chicken_type"/>
+                <field name="chicken_category"/>
+                <field name="initial_quantity"/>
+                <field name="current_quantity"/>
+                            <field name="reserved_quantity"/>
+                            <field name="available_quantity"/>
+                <field name="total_mortality"/>
+                <field name="total_sold"/>
+                <field name="current_age_months"/>
+                <field name="supplier_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_chicken_batch_form" model="ir.ui.view">
+        <field name="name">chicken.batch.form</field>
+        <field name="model">chicken.batch</field>
+        <field name="arch" type="xml">
+            <form string="Chicken Batch">
+                <header/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_mortality" type="object" class="oe_stat_button" icon="fa-heartbeat">
+                            <field name="total_mortality" widget="statinfo" string="Mortality"/>
+                        </button>
+                        <button name="action_view_sales" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="total_sold" widget="statinfo" string="Sold"/>
+                        </button>
+                        <button name="action_view_eggs" type="object" class="oe_stat_button" icon="fa-circle-o">
+                            <field name="total_eggs" widget="statinfo" string="Eggs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Purchase Information">
+                            <field name="purchase_date"/>
+                            <field name="chicken_type"/>
+                            <field name="chicken_category"/>
+                            <field name="initial_quantity"/>
+                            <field name="current_age_days"/>
+                            <field name="purchase_price"/>
+                            <field name="supplier_id"/>
+                            <field name="notify_email"/>
+                        </group>
+                        <group string="Current Status">
+                            <field name="current_quantity"/>
+                            <field name="reserved_quantity"/>
+                            <field name="available_quantity"/>
+                            <field name="age_months_at_purchase"/>
+                            <field name="current_age_months"/>
+                            <field name="recommended_feed_stage"/>
+                            <field name="total_feed_consumed"/>
+                            <field name="baby_chicken_source_id" invisible="not baby_chicken_source_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vaccination Schedule">
+                            <field name="vaccine_schedule_ids">
+                                <list editable="bottom" decoration-danger="state == 'overdue'" decoration-success="state == 'done'">
+                                    <field name="vaccine_id"/>
+                                    <field name="due_date"/>
+                                    <field name="done_date"/>
+                                    <field name="quantity_used"/>
+                                    <field name="state"/>
+                                    <field name="email_sent"/>
+                                    <button name="action_mark_done" type="object" string="Mark Done" icon="fa-check" invisible="state == 'done'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Feed Consumption">
+                            <field name="feed_consumption_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="feed_id"/>
+                                    <field name="quantity"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mortality">
+                            <field name="mortality_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="total_dead"/>
+                                    <field name="reason"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Egg Production">
+                            <field name="egg_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="quantity"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Sales">
+                            <field name="sale_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="sale_date"/>
+                                    <field name="sale_subcategory"/>
+                                    <field name="sale_type"/>
+                                    <field name="quantity"/>
+                                    <field name="selling_price"/>
+                                    <field name="customer_id"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_chicken_batch_search" model="ir.ui.view">
+        <field name="name">chicken.batch.search</field>
+        <field name="model">chicken.batch</field>
+        <field name="arch" type="xml">
+            <search string="Search Batches">
+                <field name="name"/>
+                <field name="chicken_type"/>
+                <field name="chicken_category"/>
+                <field name="supplier_id"/>
+                <filter string="Active Stock" name="filter_active_stock" domain="[('current_quantity', '&gt;', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Chicken Type" name="group_type" context="{'group_by': 'chicken_type'}"/>
+                    <filter string="Chicken Category" name="group_category" context="{'group_by': 'chicken_category'}"/>
+                    <filter string="Purchase Date" name="group_date" context="{'group_by': 'purchase_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_chicken_batch" model="ir.actions.act_window">
+        <field name="name">Batches (Purchase &amp; Dashboard)</field>
+        <field name="res_model">chicken.batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_chicken_batch_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first chicken purchase / batch entry.
+            </p>
+        </field>
+    </record>
+
+</odoo>

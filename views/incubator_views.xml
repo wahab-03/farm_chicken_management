@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_incubator_device_list" model="ir.ui.view">
+        <field name="name">incubator.device.list</field>
+        <field name="model">incubator.device</field>
+        <field name="arch" type="xml">
+            <list string="Incubators" editable="bottom">
+                <field name="name"/>
+                <field name="capacity"/>
+                <field name="location"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_incubator_device" model="ir.actions.act_window">
+        <field name="name">Incubators</field>
+        <field name="res_model">incubator.device</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_incubator_hatching_batch_list" model="ir.ui.view">
+        <field name="name">incubator.hatching.batch.list</field>
+        <field name="model">incubator.hatching.batch</field>
+        <field name="arch" type="xml">
+            <list string="Hatching Batches" decoration-danger="status == 'hatching_not_completed'" decoration-success="status == 'hatched'">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="egg_category"/>
+                <field name="number_of_eggs"/>
+                <field name="incubator_id"/>
+                <field name="expected_hatching_date"/>
+                <field name="actual_hatching_date"/>
+                <field name="baby_chicks_produced"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_incubator_hatching_batch_form" model="ir.ui.view">
+        <field name="name">incubator.hatching.batch.form</field>
+        <field name="model">incubator.hatching.batch</field>
+        <field name="arch" type="xml">
+            <form string="Hatching Batch">
+                <header>
+                    <button name="action_mark_hatched" type="object" string="Mark Hatched" class="oe_highlight" invisible="baby_chick_stock_id"/>
+                    <field name="baby_chick_stock_id" invisible="1"/>
+                    <field name="status" widget="statusbar" statusbar_visible="incubating,hatched"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="egg_category"/>
+                            <field name="number_of_eggs"/>
+                            <field name="incubator_id"/>
+                            <field name="hatching_duration"/>
+                        </group>
+                        <group>
+                            <field name="expected_hatching_date" readonly="1"/>
+                            <field name="actual_hatching_date"/>
+                            <field name="hatched_chicks"/>
+                            <field name="total_failed_damaged" readonly="1"/>
+                            <field name="baby_chicks_produced" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Failed / Damaged Eggs">
+                            <field name="failed_egg_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="egg_category"/>
+                                    <field name="total_eggs"/>
+                                    <field name="failed_eggs"/>
+                                    <field name="damaged_eggs"/>
+                                    <field name="reason"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_incubator_hatching_batch" model="ir.actions.act_window">
+        <field name="name">Hatching Batches</field>
+        <field name="res_model">incubator.hatching.batch</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_incubator_failed_egg_list" model="ir.ui.view">
+        <field name="name">incubator.failed.egg.list</field>
+        <field name="model">incubator.failed.egg</field>
+        <field name="arch" type="xml">
+            <list string="Failed / Damaged Eggs" editable="bottom">
+                <field name="date"/>
+                <field name="hatching_batch_id"/>
+                <field name="egg_category"/>
+                <field name="total_eggs"/>
+                <field name="failed_eggs"/>
+                <field name="damaged_eggs"/>
+                <field name="reason"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_incubator_failed_egg" model="ir.actions.act_window">
+        <field name="name">Failed / Damaged Eggs</field>
+        <field name="res_model">incubator.failed.egg</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

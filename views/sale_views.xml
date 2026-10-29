@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_chicken_sale_list" model="ir.ui.view">
+        <field name="name">chicken.sale.list</field>
+        <field name="model">chicken.sale</field>
+        <field name="arch" type="xml">
+            <list string="Chicken Sales" decoration-info="state == 'planned'" decoration-success="state == 'delivered'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="sale_date"/>
+                <field name="batch_id"/>
+                <field name="sale_subcategory"/>
+                <field name="sale_type"/>
+                <field name="quantity"/>
+                <field name="selling_price"/>
+                <field name="customer_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_chicken_sale_form" model="ir.ui.view">
+        <field name="name">chicken.sale.form</field>
+        <field name="model">chicken.sale</field>
+        <field name="arch" type="xml">
+            <form string="Chicken Sale">
+                <header>
+                    <button name="action_mark_delivered" type="object" string="Mark Delivered" class="oe_highlight" invisible="state != 'planned'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state == 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="planned,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sale_date"/>
+                            <field name="batch_id"/>
+                            <field name="chicken_type"/>
+                            <field name="chicken_category"/>
+                            <field name="age_months"/>
+                        </group>
+                        <group>
+                            <field name="sale_subcategory"/>
+                            <field name="sale_type" invisible="sale_subcategory == 'ready_to_cook'"/>
+                            <field name="planned_delivery_date" invisible="sale_subcategory == 'ready_to_cook' or sale_type != 'future_sale'"/>
+                            <field name="processed_weight" invisible="sale_subcategory != 'ready_to_cook'"/>
+                            <field name="quantity"/>
+                            <field name="selling_price" invisible="sale_subcategory == 'ready_to_cook'"/>
+                            <field name="customer_id" invisible="sale_subcategory == 'ready_to_cook'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_chicken_sale_search" model="ir.ui.view">
+        <field name="name">chicken.sale.search</field>
+        <field name="model">chicken.sale</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales">
+                <field name="name"/>
+                <field name="batch_id"/>
+                <field name="customer_id"/>
+                <filter string="Planned/Booked" name="filter_planned" domain="[('state', '=', 'planned')]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('state', '=', 'delivered')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Batch" name="group_batch" context="{'group_by': 'batch_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Sale Type" name="group_sale_type" context="{'group_by': 'sale_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_chicken_sale" model="ir.actions.act_window">
+        <field name="name">Chicken Sales</field>
+        <field name="res_model">chicken.sale</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_chicken_sale_search"/>
+    </record>
+
+    <record id="view_baby_chicken_sale_list" model="ir.ui.view">
+        <field name="name">baby.chicken.sale.list</field>
+        <field name="model">baby.chicken.sale</field>
+        <field name="arch" type="xml">
+            <list string="Baby Chick Sales">
+                <field name="name"/>
+                <field name="sale_date"/>
+                <field name="baby_stock_id"/>
+                <field name="category"/>
+                <field name="quantity"/>
+                <field name="selling_price"/>
+                <field name="customer_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_baby_chicken_sale_form" model="ir.ui.view">
+        <field name="name">baby.chicken.sale.form</field>
+        <field name="model">baby.chicken.sale</field>
+        <field name="arch" type="xml">
+            <form string="Baby Chick Sale">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm Sale" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <field name="sale_date"/>
+                        <field name="baby_stock_id"/>
+                        <field name="category" readonly="1"/>
+                        <field name="quantity"/>
+                        <field name="selling_price"/>
+                        <field name="customer_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_baby_chicken_sale" model="ir.actions.act_window">
+        <field name="name">Baby Chick Sales</field>
+        <field name="res_model">baby.chicken.sale</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

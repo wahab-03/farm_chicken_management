@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="cron_vaccine_due_check" model="ir.cron">
+            <field name="name">Farm: Check Vaccine Due Dates &amp; Create Reminders</field>
+            <field name="model_id" ref="model_vaccine_batch_schedule"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_due_and_remind()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="cron_hatching_overdue_check" model="ir.cron">
+            <field name="name">Farm: Check Hatching Overdue &amp; Create Reminders</field>
+            <field name="model_id" ref="model_incubator_hatching_batch"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_hatching_overdue()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="cron_hatching_due_today_check" model="ir.cron">
+            <field name="name">Farm: Check Hatching Due Today &amp; Create Reminders</field>
+            <field name="model_id" ref="model_incubator_hatching_batch"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_hatching_due_reminder()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+
+    <function model="vaccine.schedule" name="_refresh_preview_due_dates"/>
+
+    <function model="chicken.batch" name="_backfill_current_age_days"/>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_farm_root" name="Chicken Farm" sequence="10"/>
+
+    <menuitem id="menu_farm_batch" name="Batches" parent="menu_farm_root" sequence="10"/>
+    <menuitem id="menu_farm_batch_action" name="Batches (Purchase &amp; Dashboard)" parent="menu_farm_batch"
+              action="action_chicken_batch" sequence="10"/>
+
+    <menuitem id="menu_farm_vaccine" name="Vaccine" parent="menu_farm_root" sequence="20"/>
+    <menuitem id="menu_farm_vaccine_master" name="Vaccines" parent="menu_farm_vaccine"
+              action="action_vaccine_vaccine" sequence="10"/>
+    <delete model="ir.ui.menu" id="menu_farm_vaccine_calendar"/>
+    <delete model="ir.actions.act_window" id="action_vaccine_calendar"/>
+    <delete model="ir.ui.menu" id="menu_farm_vaccine_schedule_calendar"/>
+    <delete model="ir.actions.act_window" id="action_vaccine_schedule_calendar_direct"/>
+    <menuitem id="menu_farm_vaccine_batch_schedule" name="Batch Vaccination Records" parent="menu_farm_vaccine"
+              action="action_vaccine_batch_schedule" sequence="30"/>
+
+    <menuitem id="menu_farm_feed" name="Feed" parent="menu_farm_root" sequence="30"/>
+    <menuitem id="menu_farm_feed_ingredient" name="Ingredients" parent="menu_farm_feed"
+              action="action_feed_ingredient" sequence="10"/>
+    <menuitem id="menu_farm_feed_recipe" name="Recipes (Self-Mixed)" parent="menu_farm_feed"
+              action="action_feed_recipe" sequence="20"/>
+    <menuitem id="menu_farm_feed_mixing" name="Mixing Events" parent="menu_farm_feed"
+              action="action_feed_mixing" sequence="30"/>
+    <menuitem id="menu_farm_feed_product" name="Feed Products (Stock)" parent="menu_farm_feed"
+              action="action_feed_product" sequence="40"/>
+    <menuitem id="menu_farm_feed_consumption" name="Consumption (Batch-wise)" parent="menu_farm_feed"
+              action="action_feed_consumption" sequence="50"/>
+
+    <menuitem id="menu_farm_egg" name="Egg Production" parent="menu_farm_root"
+              action="action_egg_production" sequence="40"/>
+
+    <menuitem id="menu_farm_mortality" name="Mortality" parent="menu_farm_root"
+              action="action_chicken_mortality" sequence="50"/>
+
+    <menuitem id="menu_farm_sale" name="Sales" parent="menu_farm_root"
+              action="action_chicken_sale" sequence="60"/>
+
+    <menuitem id="menu_farm_incubator" name="Incubator / Hatching" parent="menu_farm_root" sequence="70"/>
+    <menuitem id="menu_farm_incubator_devices" name="Incubators" parent="menu_farm_incubator"
+              action="action_incubator_device" sequence="10"/>
+    <menuitem id="menu_farm_incubator_hatching_batch" name="Hatching Batches" parent="menu_farm_incubator"
+              action="action_incubator_hatching_batch" sequence="20"/>
+    <menuitem id="menu_farm_incubator_failed_egg" name="Failed / Damaged Eggs" parent="menu_farm_incubator"
+              action="action_incubator_failed_egg" sequence="30"/>
+
+    <menuitem id="menu_farm_baby_chicken" name="Baby Chicken" parent="menu_farm_root" sequence="80"/>
+    <menuitem id="menu_farm_baby_chicken_stock" name="Baby Chicken Stock" parent="menu_farm_baby_chicken"
+              action="action_baby_chicken_stock" sequence="10"/>
+    <menuitem id="menu_farm_baby_chicken_sale" name="Baby Chick Sales" parent="menu_farm_baby_chicken"
+              action="action_baby_chicken_sale" sequence="20"/>
+
+    <menuitem id="menu_farm_expense" name="Expenses" parent="menu_farm_root"
+              action="action_farm_expense" sequence="90"/>
+
+</odoo>

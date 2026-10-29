@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_vaccine_vaccine_list" model="ir.ui.view">
+        <field name="name">vaccine.vaccine.list</field>
+        <field name="model">vaccine.vaccine</field>
+        <field name="arch" type="xml">
+            <list string="Vaccines" decoration-danger="current_stock &lt;= 0">
+                <field name="name"/>
+                <field name="current_stock"/>
+                <field name="total_used"/>
+                <field name="latest_expiry_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vaccine_vaccine_form" model="ir.ui.view">
+        <field name="name">vaccine.vaccine.form</field>
+        <field name="model">vaccine.vaccine</field>
+        <field name="arch" type="xml">
+            <form string="Vaccine">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Vaccine Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="current_stock" readonly="1"/>
+                        <field name="total_used" readonly="1"/>
+                        <field name="latest_expiry_date" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Purchase History">
+                            <field name="purchase_ids">
+                                <list editable="bottom">
+                                    <field name="purchase_date"/>
+                                    <field name="quantity"/>
+                                    <field name="purchase_price"/>
+                                    <field name="expiry_date"/>
+                                    <field name="supplier_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vaccine_vaccine" model="ir.actions.act_window">
+        <field name="name">Vaccines</field>
+        <field name="res_model">vaccine.vaccine</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_vaccine_schedule_list" model="ir.ui.view">
+        <field name="name">vaccine.schedule.list</field>
+        <field name="model">vaccine.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Vaccine Schedule Templates" editable="bottom">
+                <field name="vaccine_id"/>
+                <field name="age_days"/>
+                <field name="preview_due_date"/>
+                <field name="age_label"/>
+                <field name="applicable_chicken_type"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vaccine_schedule_form" model="ir.ui.view">
+        <field name="name">vaccine.schedule.form</field>
+        <field name="model">vaccine.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Vaccine Schedule Template">
+                <sheet>
+                    <group>
+                        <field name="vaccine_id"/>
+                        <group col="2">
+                            <field name="age_days"/>
+                            <button name="action_open_calendar" type="object" string="Open Calendar" icon="fa-calendar" class="oe_highlight"/>
+                        </group>
+                        <field name="preview_due_date" readonly="1"/>
+                        <field name="age_label" placeholder="e.g. 2 Month"/>
+                        <field name="applicable_chicken_type"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vaccine_schedule_calendar" model="ir.ui.view">
+        <field name="name">vaccine.schedule.calendar</field>
+        <field name="model">vaccine.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Vaccine Calendar" date_start="preview_due_date" color="applicable_chicken_type" mode="month" scales="day,week,month,year">
+                <field name="name"/>
+                <field name="vaccine_id"/>
+                <field name="preview_due_date"/>
+                <field name="age_days"/>
+                <field name="applicable_chicken_type"/>
+                <field name="age_label"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_vaccine_schedule" model="ir.actions.act_window">
+        <field name="name">Vaccine Schedule Templates (Age-wise)</field>
+        <field name="res_model">vaccine.schedule</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define at which age (in days) each vaccine should be given.
+                New batches will automatically get a vaccination schedule based on this.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_vaccine_schedule_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_vaccine_schedule_list"/>
+        <field name="act_window_id" ref="action_vaccine_schedule"/>
+    </record>
+
+    <record id="action_vaccine_schedule_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_vaccine_schedule_calendar"/>
+        <field name="act_window_id" ref="action_vaccine_schedule"/>
+    </record>
+
+    <record id="action_vaccine_schedule_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_vaccine_schedule_form"/>
+        <field name="act_window_id" ref="action_vaccine_schedule"/>
+    </record>
+
+    <record id="view_vaccine_batch_schedule_list" model="ir.ui.view">
+        <field name="name">vaccine.batch.schedule.list</field>
+        <field name="model">vaccine.batch.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Batch Vaccination Records" decoration-danger="state == 'overdue'" decoration-success="state == 'done'" decoration-muted="state == 'pending'">
+                <field name="batch_id"/>
+                <field name="vaccine_id"/>
+                <field name="due_date"/>
+                <field name="done_date"/>
+                <field name="quantity_used"/>
+                <field name="state"/>
+                <field name="email_sent"/>
+                <button name="action_mark_done" type="object" string="Mark Done" icon="fa-check" invisible="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vaccine_batch_schedule_search" model="ir.ui.view">
+        <field name="name">vaccine.batch.schedule.search</field>
+        <field name="model">vaccine.batch.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Search Vaccination Records">
+                <field name="batch_id"/>
+                <field name="vaccine_id"/>
+                <filter string="Pending" name="filter_pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Overdue" name="filter_overdue" domain="[('state', '=', 'overdue')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Batch" name="group_batch" context="{'group_by': 'batch_id'}"/>
+                    <filter string="Vaccine" name="group_vaccine" context="{'group_by': 'vaccine_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_vaccine_batch_schedule_form" model="ir.ui.view">
+        <field name="name">vaccine.batch.schedule.form</field>
+        <field name="model">vaccine.batch.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Vaccination Record">
+                <header>
+                    <button name="action_mark_done" type="object" string="Mark Done" class="oe_highlight" invisible="state == 'done'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="batch_id"/>
+                            <field name="vaccine_id"/>
+                            <field name="due_date"/>
+                        </group>
+                        <group>
+                            <field name="done_date"/>
+                            <field name="quantity_used"/>
+                            <field name="state"/>
+                            <field name="email_sent"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vaccine_batch_schedule_calendar" model="ir.ui.view">
+        <field name="name">vaccine.batch.schedule.calendar</field>
+        <field name="model">vaccine.batch.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Vaccine Calendar" date_start="due_date" color="vaccine_id" mode="month" quick_create="0">
+                <field name="vaccine_id"/>
+                <field name="batch_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_vaccine_batch_schedule" model="ir.actions.act_window">
+        <field name="name">Batch Vaccination Records</field>
+        <field name="res_model">vaccine.batch.schedule</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="search_view_id" ref="view_vaccine_batch_schedule_search"/>
+        <field name="context">{'search_default_filter_pending': 1}</field>
+    </record>
+
+</odoo>

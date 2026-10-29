@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="farm_chicken_management.Dashboard" owl="1">
+    <div class="o_cfd_dashboard">
+
+        <div class="o_cfd_header">
+            <div class="o_cfd_title">
+                <i class="fa fa-tachometer o_cfd_title_icon"/>
+                <div>
+                    <h2>Poultry Farming Dashboard</h2>
+                    <div class="o_cfd_subtitle">Complete overview of your farm at a glance</div>
+                </div>
+            </div>
+            <div class="o_cfd_datetime">
+                <span><i class="fa fa-calendar"/> <t t-esc="state.now.toDateString()"/></span>
+            </div>
+        </div>
+
+        <div class="o_cfd_filters">
+            <div class="o_cfd_filter">
+                <label>Year</label>
+                <select name="year" t-on-change="onFilterChanged">
+                    <t t-foreach="state.years" t-as="y" t-key="y">
+                        <option t-att-value="y" t-att-selected="y === state.filters.year"><t t-esc="y"/></option>
+                    </t>
+                </select>
+            </div>
+            <div class="o_cfd_filter">
+                <label>Month</label>
+                <select name="month" t-on-change="onFilterChanged">
+                    <option value="0" t-att-selected="state.filters.month === 0">All</option>
+                    <option value="1" t-att-selected="state.filters.month === 1">January</option>
+                    <option value="2" t-att-selected="state.filters.month === 2">February</option>
+                    <option value="3" t-att-selected="state.filters.month === 3">March</option>
+                    <option value="4" t-att-selected="state.filters.month === 4">April</option>
+                    <option value="5" t-att-selected="state.filters.month === 5">May</option>
+                    <option value="6" t-att-selected="state.filters.month === 6">June</option>
+                    <option value="7" t-att-selected="state.filters.month === 7">July</option>
+                    <option value="8" t-att-selected="state.filters.month === 8">August</option>
+                    <option value="9" t-att-selected="state.filters.month === 9">September</option>
+                    <option value="10" t-att-selected="state.filters.month === 10">October</option>
+                    <option value="11" t-att-selected="state.filters.month === 11">November</option>
+                    <option value="12" t-att-selected="state.filters.month === 12">December</option>
+                </select>
+            </div>
+            <div class="o_cfd_filter">
+                <label>Chicken Type</label>
+                <select name="chickenType" t-on-change="onFilterChanged">
+                    <option value="all" t-att-selected="state.filters.chickenType === 'all'">All</option>
+                    <option value="deshi" t-att-selected="state.filters.chickenType === 'deshi'">Deshi</option>
+                    <option value="farmer_poultry" t-att-selected="state.filters.chickenType === 'farmer_poultry'">Farmer / Poultry</option>
+                    <option value="pahari" t-att-selected="state.filters.chickenType === 'pahari'">Pahari</option>
+                </select>
+            </div>
+            <div class="o_cfd_filter">
+                <label>Chicken Category</label>
+                <select name="chickenCategory" t-on-change="onFilterChanged">
+                    <option value="all" t-att-selected="state.filters.chickenCategory === 'all'">All</option>
+                    <option value="morog" t-att-selected="state.filters.chickenCategory === 'morog'">Morog</option>
+                    <option value="murgi" t-att-selected="state.filters.chickenCategory === 'murgi'">Murgi</option>
+                    <option value="baby_chicks" t-att-selected="state.filters.chickenCategory === 'baby_chicks'">Baby Chicks</option>
+                </select>
+            </div>
+            <div class="o_cfd_filter">
+                <label>Batch</label>
+                <select name="batchId" t-on-change="onFilterChanged">
+                    <option value="all" t-att-selected="state.filters.batchId === 'all'">All</option>
+                    <t t-foreach="state.batches" t-as="b" t-key="b.id">
+                        <option t-att-value="b.id" t-att-selected="state.filters.batchId === ('' + b.id)"><t t-esc="b.name"/></option>
+                    </t>
+                </select>
+            </div>
+        </div>
+
+        <div t-if="state.error" class="alert alert-warning" role="alert"><t t-esc="state.error"/></div>
+
+        <div class="o_cfd_kpi_grid">
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_blue"><i class="fa fa-database"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Total Batches</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.totalBatches)"/></div>
+                    <div t-att-class="state.kpi.totalBatchesDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.totalBatchesDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.totalBatchesDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_amber"><i class="fa fa-paw"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Current Chickens</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.currentChickens)"/></div>
+                    <div t-att-class="state.kpi.currentChickensDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.currentChickensDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.currentChickensDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_red"><i class="fa fa-heartbeat"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Mortality</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.mortality)"/></div>
+                    <div t-att-class="state.kpi.mortalityDelta &lt;= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.mortalityDelta &lt;= 0 ? 'fa fa-arrow-down' : 'fa fa-arrow-up'"/>
+                        <t t-esc="Math.abs(state.kpi.mortalityDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_yellow"><i class="fa fa-circle-o"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Egg Production</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.eggProduction)"/></div>
+                    <div t-att-class="state.kpi.eggProductionDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.eggProductionDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.eggProductionDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_green"><i class="fa fa-leaf"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Feed Consumed</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.feedConsumed)"/> kg</div>
+                    <div t-att-class="state.kpi.feedConsumedDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.feedConsumedDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.feedConsumedDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_emerald"><i class="fa fa-money"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Sales Revenue</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtMoney(state.kpi.salesRevenue)"/></div>
+                    <div t-att-class="state.kpi.salesRevenueDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.salesRevenueDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.salesRevenueDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_pink"><i class="fa fa-file-text"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Farm Expenses</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtMoney(state.kpi.farmExpenses)"/></div>
+                    <div t-att-class="state.kpi.farmExpensesDelta &lt;= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.farmExpensesDelta &lt;= 0 ? 'fa fa-arrow-down' : 'fa fa-arrow-up'"/>
+                        <t t-esc="Math.abs(state.kpi.farmExpensesDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+            <div class="o_cfd_kpi_card">
+                <div class="o_cfd_kpi_icon o_cfd_bg_orange"><i class="fa fa-sun-o"/></div>
+                <div class="o_cfd_kpi_body">
+                    <div class="o_cfd_kpi_label">Baby Chicks (Hatched)</div>
+                    <div class="o_cfd_kpi_value"><t t-esc="fmtNum(state.kpi.babyChicks)"/></div>
+                    <div t-att-class="state.kpi.babyChicksDelta >= 0 ? 'o_cfd_delta_up' : 'o_cfd_delta_down'">
+                        <i t-att-class="state.kpi.babyChicksDelta >= 0 ? 'fa fa-arrow-up' : 'fa fa-arrow-down'"/>
+                        <t t-esc="Math.abs(state.kpi.babyChicksDelta)"/>% from last period
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="o_cfd_row o_cfd_row_4">
+            <div class="o_cfd_panel o_cfd_span2">
+                <div class="o_cfd_panel_title">Monthly Farm Performance</div>
+                <div class="o_cfd_chart_wrap"><canvas t-ref="canvasMonthly"/></div>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Profit Margin</div>
+                <div class="o_cfd_gauge_wrap">
+                    <div class="o_cfd_chart_wrap o_cfd_gauge"><canvas t-ref="canvasProfit"/></div>
+                    <div class="o_cfd_gauge_value"><t t-if="state.profitFiltered">N/A</t><t t-else=""><t t-esc="state.profitMargin"/>%</t></div>
+                    <div class="o_cfd_gauge_label">Net Profit Margin</div>
+                </div>
+                <div class="o_cfd_profit_legend">
+                    <div><span class="o_cfd_dot o_cfd_bg_emerald"/> Revenue: <t t-esc="fmtMoney(state.revenueTotal)"/></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_red"/> Expenses: <t t-if="state.profitFiltered">N/A (not batch-wise)</t><t t-else=""><t t-esc="fmtMoney(state.expenseTotal)"/></t></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_blue"/> Net Profit: <t t-if="state.profitFiltered">N/A (clear filters)</t><t t-else=""><t t-esc="fmtMoney(state.netProfit)"/></t></div>
+                </div>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Chicken Stock by Type</div>
+                <div class="o_cfd_chart_wrap"><canvas t-ref="canvasStockType"/></div>
+            </div>
+        </div>
+
+        <div class="o_cfd_row o_cfd_row_1">
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Stock by Category</div>
+                <div class="o_cfd_chart_wrap"><canvas t-ref="canvasStockCategory"/></div>
+            </div>
+        </div>
+
+        <div class="o_cfd_row o_cfd_row_4">
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Vaccination Status</div>
+                <div class="o_cfd_chart_wrap o_cfd_small"><canvas t-ref="canvasVaccination"/></div>
+                <div class="o_cfd_legend_list">
+                    <div><span class="o_cfd_dot o_cfd_bg_emerald"/> Completed <b><t t-esc="state.vaccinationStatus.completedPct"/>%</b></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_amber"/> Due Soon <b><t t-esc="state.vaccinationStatus.dueSoonPct"/>%</b></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_red"/> Overdue <b><t t-esc="state.vaccinationStatus.overduePct"/>%</b></div>
+                </div>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Mortality by Reason</div>
+                <div class="o_cfd_chart_wrap"><canvas t-ref="canvasMortalityReason"/></div>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Feed &amp; Farm Inventory</div>
+                <ul class="o_cfd_inv_list">
+                    <li><i class="fa fa-shopping-basket o_cfd_inv_icon o_cfd_bg_emerald"/>
+                        <span class="o_cfd_inv_label">Purchased Feed</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.feedInventory.purchased)"/> kg</span></li>
+                    <li><i class="fa fa-flask o_cfd_inv_icon o_cfd_bg_emerald"/>
+                        <span class="o_cfd_inv_label">Prepared Feed</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.feedInventory.prepared)"/> kg</span></li>
+                    <li><i class="fa fa-leaf o_cfd_inv_icon o_cfd_bg_amber"/>
+                        <span class="o_cfd_inv_label">Raw Ingredients</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.feedInventory.rawIngredients)"/> kg</span></li>
+                    <li><i class="fa fa-medkit o_cfd_inv_icon o_cfd_bg_purple"/>
+                        <span class="o_cfd_inv_label">Vaccines</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.feedInventory.vaccines)"/> units</span></li>
+                </ul>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Feed Stock by Age Stage</div>
+                <div class="o_cfd_chart_wrap"><canvas t-ref="canvasFeedStage"/></div>
+            </div>
+        </div>
+
+        <div class="o_cfd_row o_cfd_row_4">
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Hatching Outcome</div>
+                <div class="o_cfd_chart_wrap o_cfd_small"><canvas t-ref="canvasHatching"/></div>
+                <div class="o_cfd_legend_list">
+                    <div><span class="o_cfd_dot o_cfd_bg_emerald"/> Hatched <b><t t-esc="state.hatching.hatchedPct"/>%</b></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_red"/> Failed <b><t t-esc="state.hatching.failedPct"/>%</b></div>
+                    <div><span class="o_cfd_dot o_cfd_bg_amber"/> Damaged <b><t t-esc="state.hatching.damagedPct"/>%</b></div>
+                </div>
+                <div class="o_cfd_expected" t-if="state.hatching.expectedDate">
+                    Nearest Expected Hatch Date: <b><t t-esc="state.hatching.expectedDate"/></b>
+                </div>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Top Batches</div>
+                <table class="o_cfd_table">
+                    <thead>
+                        <tr><th>Batch</th><th>Type</th><th>Qty</th><th>Mort.</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.topBatches" t-as="tb" t-key="tb.name">
+                            <td><t t-esc="tb.name"/></td>
+                            <td><t t-esc="tb.chickenType"/></td>
+                            <td><t t-esc="tb.currentQuantity"/></td>
+                            <td><t t-esc="tb.mortality"/></td>
+                            <td><span t-att-class="tb.status === 'Active' ? 'o_cfd_badge_active' : 'o_cfd_badge_closed'"><t t-esc="tb.status"/></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Recent Activities</div>
+                <ul class="o_cfd_activity_list">
+                    <li t-foreach="state.recentActivities" t-as="act" t-key="act_index">
+                        <i t-attf-class="fa {{act.icon}} o_cfd_activity_icon"/>
+                        <span class="o_cfd_activity_text"><t t-esc="act.text"/></span>
+                        <span class="o_cfd_activity_time"><t t-esc="act.ago"/></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="o_cfd_panel">
+                <div class="o_cfd_panel_title">Quick Stats</div>
+                <ul class="o_cfd_inv_list">
+                    <li><i class="fa fa-paw o_cfd_inv_icon o_cfd_bg_amber"/>
+                        <span class="o_cfd_inv_label">Live Chicken</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.quickStats.liveChicken)"/></span></li>
+                    <li><i class="fa fa-cutlery o_cfd_inv_icon o_cfd_bg_red"/>
+                        <span class="o_cfd_inv_label">Ready to Cook (sold)</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.quickStats.readyToCook)"/></span></li>
+                    <li><i class="fa fa-lock o_cfd_inv_icon o_cfd_bg_blue"/>
+                        <span class="o_cfd_inv_label">Reserved</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.quickStats.reserved)"/></span></li>
+                    <li><i class="fa fa-sun-o o_cfd_inv_icon o_cfd_bg_orange"/>
+                        <span class="o_cfd_inv_label">Baby Chicks (in stock)</span>
+                        <span class="o_cfd_inv_value"><t t-esc="fmtNum(state.quickStats.babyChicks)"/></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="o_cfd_footnote">
+            KPI cards, monthly trend, mortality-by-reason and hatching figures follow the Year/Month filter above.
+            Stock-by-type/category, quick stats and inventory levels always reflect the current live snapshot.
+            Chicken Type / Category / Batch filters apply wherever a batch dimension is meaningful.
+        </div>
+
+        <div class="o_cfd_loading" t-if="state.loading">
+            <i class="fa fa-spin fa-spinner"/> Loading dashboard...
+        </div>
+    </div>
+</t>
+
+</templates>

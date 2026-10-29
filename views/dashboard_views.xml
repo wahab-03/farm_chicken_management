@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_chicken_farm_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">chicken_farm_dashboard_action</field>
+    </record>
+
+    <menuitem id="menu_farm_dashboard"
+              name="Dashboard"
+              parent="menu_farm_root"
+              action="action_chicken_farm_dashboard"
+              sequence="1"/>
+
+</odoo>

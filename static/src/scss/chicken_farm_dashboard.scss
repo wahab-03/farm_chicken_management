@@ -1,0 +1,267 @@
+.o_cfd_dashboard {
+    padding: 20px 24px 40px;
+    background: #f4f6f9;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: calc(100vh - var(--o-navbar-height, 46px));
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    overscroll-behavior-y: contain;
+
+    .o_cfd_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .o_cfd_title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .o_cfd_title_icon {
+                font-size: 22px;
+                background: #eef2ff;
+                color: #4f46e5;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            h2 { margin: 0; font-size: 20px; font-weight: 700; }
+            .o_cfd_subtitle { color: #6b7280; font-size: 13px; }
+        }
+        .o_cfd_datetime { color: #6b7280; font-size: 13px; }
+    }
+
+    .o_cfd_filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+
+        .o_cfd_filter {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 140px;
+
+            label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: .03em; }
+            select {
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 6px 8px;
+                font-size: 13px;
+                background: #fff;
+            }
+        }
+    }
+
+    .o_cfd_kpi_grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 18px;
+
+        @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .o_cfd_kpi_card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+
+        .o_cfd_kpi_icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            flex: 0 0 auto;
+        }
+        .o_cfd_kpi_body { flex: 1 1 auto; min-width: 0; }
+        .o_cfd_kpi_label { font-size: 12px; color: #6b7280; }
+        .o_cfd_kpi_value { font-size: 20px; font-weight: 700; margin: 2px 0; }
+    }
+
+    .o_cfd_delta_up { color: #16a34a; font-size: 12px; }
+    .o_cfd_delta_down { color: #dc2626; font-size: 12px; }
+
+    .o_cfd_row {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .o_cfd_row_4 { grid-template-columns: repeat(4, 1fr); }
+    .o_cfd_row_1 { grid-template-columns: 1fr; }
+    .o_cfd_span2 { grid-column: span 2; }
+
+    @media (max-width: 1100px) {
+        .o_cfd_row_4 { grid-template-columns: repeat(2, 1fr); }
+        .o_cfd_span2 { grid-column: span 2; }
+    }
+
+    .o_cfd_panel {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        display: flex;
+        flex-direction: column;
+
+        .o_cfd_panel_title { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+    }
+
+    .o_cfd_chart_wrap {
+        position: relative;
+        height: 220px;
+        &.o_cfd_small { height: 160px; }
+    }
+
+    .o_cfd_gauge_wrap {
+        position: relative;
+        text-align: center;
+
+        .o_cfd_gauge { height: 140px; }
+        .o_cfd_gauge_value {
+            position: absolute;
+            top: 75px;
+            left: 0;
+            right: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #16a34a;
+        }
+        .o_cfd_gauge_label { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    }
+
+    .o_cfd_profit_legend {
+        margin-top: 10px;
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .o_cfd_dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .o_cfd_bg_blue { background: #3b82f6; }
+    .o_cfd_bg_amber { background: #f59e0b; }
+    .o_cfd_bg_red { background: #ef4444; }
+    .o_cfd_bg_yellow { background: #eab308; }
+    .o_cfd_bg_green { background: #22c55e; }
+    .o_cfd_bg_emerald { background: #16a34a; }
+    .o_cfd_bg_pink { background: #ec4899; }
+    .o_cfd_bg_orange { background: #fb923c; }
+    .o_cfd_bg_purple { background: #a855f7; }
+
+    .o_cfd_legend_list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 12px;
+        margin-top: 8px;
+
+        b { margin-left: auto; }
+        div { display: flex; align-items: center; }
+    }
+
+    .o_cfd_inv_list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        li { display: flex; align-items: center; gap: 10px; }
+        .o_cfd_inv_icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+        .o_cfd_inv_label { flex: 1 1 auto; font-size: 13px; color: #374151; }
+        .o_cfd_inv_value { font-weight: 700; font-size: 13px; }
+    }
+
+    .o_cfd_expected {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #374151;
+        text-align: center;
+    }
+
+    .o_cfd_table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+
+        th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid #f1f5f9; }
+        th { color: #6b7280; font-weight: 600; }
+    }
+
+    .o_cfd_badge_active {
+        background: #dcfce7; color: #16a34a; border-radius: 999px; padding: 2px 8px; font-size: 11px;
+    }
+    .o_cfd_badge_closed {
+        background: #f1f5f9; color: #64748b; border-radius: 999px; padding: 2px 8px; font-size: 11px;
+    }
+
+    .o_cfd_activity_list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        li { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+        .o_cfd_activity_icon { color: #6366f1; width: 18px; text-align: center; }
+        .o_cfd_activity_text { flex: 1 1 auto; color: #374151; }
+        .o_cfd_activity_time { color: #9ca3af; white-space: nowrap; }
+    }
+
+    .o_cfd_footnote {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 6px;
+    }
+
+    .o_cfd_loading {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        background: #111827;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+}
+            

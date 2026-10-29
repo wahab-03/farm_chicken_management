@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_baby_chicken_stock_list" model="ir.ui.view">
+        <field name="name">baby.chicken.stock.list</field>
+        <field name="model">baby.chicken.stock</field>
+        <field name="arch" type="xml">
+            <list string="Baby Chicken Stock" decoration-muted="state == 'converted'">
+                <field name="name"/>
+                <field name="hatching_batch_id"/>
+                <field name="category"/>
+                <field name="quantity"/>
+                <field name="sold_quantity"/>
+                <field name="current_quantity"/>
+                <field name="hatching_date"/>
+                <field name="age_days"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_baby_chicken_stock_form" model="ir.ui.view">
+        <field name="name">baby.chicken.stock.form</field>
+        <field name="model">baby.chicken.stock</field>
+        <field name="arch" type="xml">
+            <form string="Baby Chicken Stock">
+                <header>
+                    <button name="action_convert_to_batch" type="object" string="Convert to Regular Batch" class="oe_highlight" invisible="state == 'converted'"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <field name="hatching_batch_id"/>
+                        <field name="category"/>
+                        <field name="quantity"/>
+                        <field name="hatching_date"/>
+                        <field name="age_days" readonly="1"/>
+                        <field name="state"/>
+                        <field name="converted_batch_id" readonly="1" invisible="not converted_batch_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_baby_chicken_stock" model="ir.actions.act_window">
+        <field name="name">Baby Chicken Stock</field>
+        <field name="res_model">baby.chicken.stock</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
